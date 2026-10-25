@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>19 estrellas para mi niñita hermosa</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+:root{
+  --night:#04061a;--deep:#0a1033;--glow:#7fa8ff;--star:#fff4d9;--ink:#e8eeff;--mute:#8f9cc9;--line:rgba(127,168,255,.28);
+  color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{height:100%;margin:0;overflow:hidden;color:var(--ink);font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  background:var(--night) radial-gradient(120% 70% at 80% 0%,#1d2f7a 0%,transparent 60%),radial-gradient(90% 60% at 10% 100%,#2a1c63 0%,transparent 65%),linear-gradient(#070b27,#04061a)}
+#bg{position:fixed;inset:0;width:100%;height:100%}
+.moon{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);right:18px;width:54px;height:54px;border-radius:50%;
+  box-shadow:inset -17px 5px 0 0 #f6f1de;filter:drop-shadow(0 0 14px rgba(190,210,255,.6));transform:rotate(-20deg)}
+main{position:relative;height:100%;display:flex;flex-direction:column;padding:22px 18px 12px;max-width:640px;margin:0 auto}
+header{padding-right:64px}
+.hud{margin:0 0 10px;display:flex;gap:14px;font:400 .72rem 'JetBrains Mono',ui-monospace,monospace;color:var(--mute)}
+h1{margin:0;font-style:italic;font-weight:600;font-size:clamp(1.9rem,8vw,2.7rem);line-height:1.05;letter-spacing:.005em}
+.sub{margin:8px 0 12px;color:var(--mute);font-size:1.15rem;font-style:italic}
+.bar{height:2px;background:rgba(127,168,255,.18);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--glow),var(--star));transition:width .5s ease}
+.wrap{flex:1;display:grid;place-items:center;min-height:0}
+.stage{position:relative;width:min(92vw,56vh);aspect-ratio:1.1}
+#lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#lines line{stroke:rgba(127,168,255,.16);stroke-width:1;stroke-dasharray:2 4;vector-effect:non-scaling-stroke;transition:stroke .6s,stroke-width .6s}
+#lines line.on{stroke:rgba(255,244,217,.85);stroke-dasharray:none;stroke-width:1.4}
+.star{position:absolute;width:40px;height:40px;transform:translate(-50%,-50%);display:grid;place-items:center;padding:0;border:0;background:none;color:inherit;cursor:pointer}
+.star:focus-visible{outline:2px solid var(--glow);outline-offset:-4px;border-radius:50%}
+.star::before,.star::after{content:"";position:absolute;left:50%;top:50%;transition:all .4s}
+.star::before{width:1.5px;height:26px;transform:translate(-50%,-50%);background:linear-gradient(transparent,var(--glow),transparent);opacity:.8}
+.star::after{width:26px;height:1.5px;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,var(--glow),transparent);opacity:.8}
+.core{width:9px;height:9px;border-radius:50%;background:var(--glow);box-shadow:0 0 10px 2px rgba(127,168,255,.85);transition:all .4s;
+  animation:in .8s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--i)*90ms + 400ms)}
+.n{position:absolute;top:27px;font:400 .6rem 'JetBrains Mono',ui-monospace,monospace;color:var(--mute);transition:color .4s}
+.star.seen .core{background:var(--star);box-shadow:0 0 14px 4px rgba(255,244,217,.8)}
+.star.seen::before{height:38px;background:linear-gradient(transparent,var(--star),transparent)}
+.star.seen::after{width:38px;background:linear-gradient(90deg,transparent,var(--star),transparent)}
+.star.seen .n{color:var(--star)}
+.star.cur .core{transform:scale(1.5);box-shadow:0 0 0 6px rgba(127,168,255,.25),0 0 18px 6px rgba(255,244,217,.9)}
+@keyframes in{from{opacity:0;transform:scale(.1)}}
+.hint{margin:0 0 6px;text-align:center;color:var(--mute);font-style:italic;font-size:1.05rem;min-height:1.3em}
+#sheet{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:540px;margin:0 auto;padding:16px 18px 18px;border-radius:22px;
+  background:rgba(8,13,44,.8);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--line);
+  box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06);animation:up .35s ease both}
+#sheet[hidden],#final[hidden]{display:none}
+@keyframes up{from{opacity:0;transform:translateY(18px)}}
+.top{display:flex;justify-content:space-between;align-items:center;font:400 .72rem 'JetBrains Mono',ui-monospace,monospace;color:var(--mute)}
+.top button,.nav button{all:unset;cursor:pointer;color:var(--ink);width:36px;height:36px;display:grid;place-items:center;border-radius:50%;font-size:1.5rem;line-height:1}
+.top button:focus-visible,.nav button:focus-visible,.spot:focus-visible,#again:focus-visible{outline:2px solid var(--glow)}
+#t{margin:4px 0 0;font-style:italic;font-weight:600;font-size:1.85rem;line-height:1.1}
+.by{margin:2px 0 12px;color:var(--glow);font-size:1.1rem}
+.note{margin:0 0 16px;font-size:1.4rem;line-height:1.35;font-style:italic}
+.nav{display:flex;align-items:center;gap:10px}
+.spot{flex:1;text-align:center;text-decoration:none;color:#fff;font:400 .85rem 'JetBrains Mono',ui-monospace,monospace;padding:12px 14px;border-radius:99px;
+  background:linear-gradient(135deg,#3f78ff,#7a8bff);box-shadow:0 6px 22px rgba(63,120,255,.45)}
+#final{position:fixed;inset:0;display:grid;place-items:center;padding:28px;text-align:center;background:radial-gradient(80% 60% at 50% 40%,rgba(40,70,170,.55),rgba(3,5,20,.94));
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:up .9s ease both}
+#final p{margin:0 0 14px}
+.big{font-style:italic;font-weight:600;font-size:clamp(2rem,9vw,3rem);line-height:1.1;color:var(--star)}
+.fine{font-size:1.35rem;color:var(--ink)}
+.sign{font-style:italic;color:var(--glow);font-size:1.3rem}
+#again{all:unset;cursor:pointer;margin-top:10px;font:400 .8rem 'JetBrains Mono',ui-monospace,monospace;color:var(--mute);padding:10px 16px;border:1px solid var(--line);border-radius:99px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="moon" aria-hidden="true"></div>
+<main>
+  <header>
+    <p class="hud"><span>cielo del 25 de octubre</span><span id="count">0 / 19</span></p>
+    <h1>19 estrellas para mi niñita hermosa</h1>
+    <p class="sub">Una por cada año que cumples.</p>
+    <div class="bar"><i id="fill"></i></div>
+  </header>
+  <div class="wrap"><div class="stage" id="stage"><svg id="lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg></div></div>
+  <p class="hint" id="hint">Toca una estrella</p>
+</main>
+<aside id="sheet" hidden aria-live="polite">
+  <div class="top"><span id="tag"></span><button id="x" aria-label="Cerrar">×</button></div>
+  <h2 id="t"></h2>
+  <p class="by" id="by"></p>
+  <p class="note" id="note"></p>
+  <div class="nav">
+    <button id="prev" aria-label="Estrella anterior">‹</button>
+    <a class="spot" id="sp" target="_blank" rel="noopener">Escuchar en Spotify</a>
+    <button id="next" aria-label="Estrella siguiente">›</button>
+  </div>
+</aside>
+<section id="final" hidden>
+  <div>
+    <p class="big">te quiero muchísimo mi niñita de ojitos preciosos</p>
+    <p class="fine">Feliz cumpleaños 🤍 Pronto vamos a escuchar todas estas juntas, sin pantalla de por medio.</p>
+    <p class="sign">con cariño, tu negrita linda 🤍</p>
+    <button id="again">volver al cielo</button>
+  </div>
+</section>
+<script>
+var S=[
+["Photograph","Ed Sheeran","Habla de querer a alguien a la distancia y llevarla contigo a todos lados. Así te llevo yo, beibisyta."],
+["Contigo en la distancia","Luis Miguel","Aunque no estemos en el mismo lugar, estoy contigo, mi cariño. Todos los días."],
+["Blue","yung kai","Azul, porque es tu color, mi blanquita vainilla. Desde que te conozco el azul me gusta más."],
+["Until I Found You","Stephen Sanchez","Me hace pensar en ti sin querer. Encontrarte fue de lo más lindo que me ha pasado."],
+["Mi Persona Favorita","Alejandro Sanz y Camila Cabello","Lo eres, mi amor. Punto."],
+["Can’t Help Falling in Love","Elvis Presley","No lo planeé y aun así pasó. Y no cambiaría nada, mi marshmellow."],
+["Lover","Taylor Swift","Quiero que esta sea nuestra el día que por fin estemos juntas."],
+["Es por ti","Juanes","Si hoy sonrío más de lo normal, es por ti, hermosisisima."],
+["Mi Niña Bonita","Chino y Nacho","Porque eres mi niñita y siempre lo vas a ser."],
+["Eres Tú","Mocedades","Una canción de las de antes que dice lo que pienso: de todas las personas del mundo, eres tú, mi amorcito."],
+["Better Together","Jack Johnson","Sé que juntas todo va a ser mejor, y mientras tanto nos acompañamos desde lejos."],
+["Count on Me","Bruno Mars","Para que sepas que cuentas conmigo siempre, lely: para reír, para llorar, para lo que sea."],
+["Crayola","Danny Ocean","Contigo todo tiene más color, mi conejita tierna, como una caja de crayolas. Hasta el cielo de noche."],
+["A Sky Full of Stars","Coldplay","Estamos bajo el mismo cielo, lelysita. Mira arriba siempre y piensa en mí."],
+["Adore You","Harry Styles","es que te adoro toditititiita"],
+["Lunares","Chico Cometa","Cada uno de tus lunares es una estrellita en tu piel, preciosa. Y yo me los quiero aprender de memoria."],
+["I Wanna Be Yours","Arctic Monkeys","Esta va por nuestro nivel de intensas pro max 😌"],
+["Corazón","Danny Ocean","Lo que más me enamora de ti es tu corazón, mi niña."],
+["Fly Me to the Moon","Frank Sinatra","Te llevaría a la luna si pudiera. Por ahora te regalo todo este cielo."]
+];
+var N=19,seen={},cur=-1,done=false,$=function(i){return document.getElementById(i)};
+var stage=$('stage'),svg=$('lines'),stars=[],pts=[],lines=[];
+var D=[],L=[0];
+for(var k=0;k<=720;k++){
+  var t=Math.PI+2*Math.PI*k/720;
+  var x=16*Math.pow(Math.sin(t),3),y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+  D.push([50+x*2.7,50-(y+2.4)*2.88]);
+  if(k)L.push(L[k-1]+Math.hypot(D[k][0]-D[k-1][0],(D[k][1]-D[k-1][1])/1.1));
+}
+for(var i=0,k=0;i<N;i++){
+  var s=L[720]*i/N;
+  while(k<720&&L[k+1]<s)k++;
+  pts.push(D[k]);
+}
+for(var i=0;i<N;i++){
+  var j=(i+1)%N,l=document.createElementNS('http://www.w3.org/2000/svg','line');
+  l.setAttribute('x1',pts[i][0]);l.setAttribute('y1',pts[i][1]);l.setAttribute('x2',pts[j][0]);l.setAttribute('y2',pts[j][1]);
+  svg.appendChild(l);lines.push(l);
+}
+S.forEach(function(s,i){
+  var b=document.createElement('button');b.className='star';b.style.left=pts[i][0]+'%';b.style.top=pts[i][1]+'%';b.style.setProperty('--i',i);
+  b.setAttribute('aria-label','Estrella '+(i+1)+': '+s[0]);
+  b.innerHTML='<span class="core"></span><span class="n">'+(i+1)+'</span>';
+  b.addEventListener('click',function(){cur===i&&!$('sheet').hidden?closeSheet():openStar(i)});
+  stage.appendChild(b);stars.push(b);
+});
+function openStar(i){
+  cur=i;var s=S[i];seen[i]=1;
+  $('tag').textContent='estrella '+(i+1)+' de '+N;$('t').textContent=s[0];$('by').textContent=s[1];$('note').textContent=s[2];
+  $('sp').href='https://open.spotify.com/search/'+encodeURIComponent((s[0]+' '+s[1]).replace(/’/g,"'"));
+  var sh=$('sheet');sh.hidden=false;sh.style.animation='none';void sh.offsetWidth;sh.style.animation='';
+  paint();
+}
+function paint(){
+  var n=Object.keys(seen).length;
+  stars.forEach(function(b,i){b.classList.toggle('seen',!!seen[i]);b.classList.toggle('cur',i===cur&&!$('sheet').hidden)});
+  lines.forEach(function(l,i){l.classList.toggle('on',!!seen[i]&&!!seen[(i+1)%N])});
+  $('count').textContent=n+' / '+N;$('fill').style.width=(n/N*100)+'%';
+  $('hint').textContent=n===N?'El cielo está completo':(n?'Faltan '+(N-n)+' estrellas':'Toca una estrella');
+}
+function closeSheet(){
+  $('sheet').hidden=true;cur=-1;paint();
+  if(Object.keys(seen).length===N&&!done){done=true;setTimeout(function(){$('final').hidden=false},500)}
+}
+$('x').onclick=closeSheet;
+$('prev').onclick=function(){openStar((cur+N-1)%N)};
+$('next').onclick=function(){openStar((cur+1)%N)};
+$('again').onclick=function(){$('final').hidden=true};
+$('hint').onclick=function(){if(done)$('final').hidden=false};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){$('final').hidden=true;if(!$('sheet').hidden)closeSheet()}});
+(function(){
+  var c=$('bg'),g=c.getContext('2d'),W,H,d=Math.min(window.devicePixelRatio||1,2),P=[],q=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){W=innerWidth;H=innerHeight;c.width=W*d;c.height=H*d;g.setTransform(d,0,0,d,0,0);P=[];
+    for(var i=0;i<Math.round(W*H/5200);i++)P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+.2,p:Math.random()*6.3,s:Math.random()*1.2+.3})}
+  function draw(t){g.clearRect(0,0,W,H);
+    for(var i=0;i<P.length;i++){var s=P[i],a=q?.7:.35+.55*(.5+.5*Math.sin(t/1000*s.s+s.p));
+      g.fillStyle='rgba(235,242,255,'+a+')';g.beginPath();g.arc(s.x,s.y,s.r,0,6.283);g.fill()}
+    if(!q)requestAnimationFrame(draw)}
+  size();addEventListener('resize',function(){size();if(q)draw(0)});requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
